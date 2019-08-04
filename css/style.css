@@ -17,7 +17,7 @@ button {
 body {
   font: 1em/1.5;
   color: rgba(6, 49, 68, 0.9);
-	background: #e6f0f5;
+	background: #CDE0FB;
 }
 
 header {
@@ -40,9 +40,9 @@ a {
 
 form {
 	padding: .875em 1.875em 1.875em;
-	background: #9bdcf8;
+	background: #9BBEEF;
 	border: 2px solid rgba(8, 63, 87, 0.7);
-	border-radius: 4px;
+	border-radius: 3px;
 }
 
 fieldset,
@@ -62,7 +62,7 @@ button {
 }
 
 legend {
-	font-weight: 500;
+	font-weight: bold;
 	padding-top: .5em;
 	border-top: 2px solid rgba(8, 63, 87, 0.6);
 	margin-bottom: 1.125em;
@@ -90,8 +90,8 @@ input {
 	font-weight: 500;
 	padding: .8em;
 	background: #e9f6fb;
-	border: 2px solid #b0d3e2;
-	border-radius: 4px;
+	border: 2px solid #6F9DDC;
+	border-radius: 3px;
 	outline: none;
 }
 
@@ -118,8 +118,7 @@ button {
 }
 
 button:hover {
-	background: #0887bd;
-	border: 2px solid #f4f6f6;
+	background: #6F9DDC;
 }
 
 input, 
