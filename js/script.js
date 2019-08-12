@@ -10,6 +10,13 @@ const colorOption = $('#color');
 const targetName = $('.activities [name]');
 const activitiesInput = $('.activities input');
 const activitiesField = $('.activities');
+const creditCard = $('#payment option[value="credit card"]');
+const paypal = $('#payment option[value="paypal"]');
+const bitcoin = $('#payment option[value="bitcoin"]');
+const regexEmail = /^.+@\w+\.com$/;
+const regexCreditCard = /^\d{13,16}$/;
+const regexZipCode = /^\d{5}$/;
+const regexCVV = /^\d{3}$/;
 const jsPunsAvailable = [
     $('#color option[value="cornflowerblue"]'),
     $('#color option[value="darkslategrey"]'),
@@ -147,10 +154,6 @@ $(activitiesField).on('click', function(e){
 /******************************************
 Payment Section
 ******************************************/
-const creditCard = $('#payment option[value="credit card"]');
-const paypal = $('#payment option[value="paypal"]');
-const bitcoin = $('#payment option[value="bitcoin"]');
-
 // hide the select payment method initially
 $('#payment option[value="select method"]').attr('disabled',true).attr('hidden', true);
 // Set the credit card payment method to selcted intially 
@@ -159,6 +162,7 @@ creditCard.attr('selected', true);
 $('#paypal').addClass('is-hidden');
 $('#bitcoin').addClass('is-hidden');
 
+// click event listener for the payment method options
 $('#payment').change(function(e){
     let select = e.target;
 
@@ -205,6 +209,102 @@ $('#payment').change(function(e){
     }
 });
 
+/******************************************
+Form Validation
+******************************************/
+
+// Function to check if NAME field is blank and to add/remove helper class that shows the user their error
+const nameVal = () => {
+    const name = $('#name');
+    // if empty add class
+    if(name.val() === '') {
+        name.addClass('submit-error');
+    // if not remove class    
+    } else if(name.val() !== '') {
+        name.removeClass('submit-error');
+    }
+};
+
+// Function to check if EMAIL field is blank and to add/remove helper class that shows the user their error
+const emailVal = () => {
+    const email = $('#mail');
+    let emailValue = email.val();
+    // if empty add class
+    if (emailValue === '') {
+        email.addClass('submit-error');
+    // if not remove class
+    } else if(emailValue !== '' && emailValue.match(regexEmail)) {
+        email.removeClass('submit-error');
+    }
+};
+
+// Function to check if ACTIVITIES field has any items checked, and to add/remove helper class that shows the user their error
+const activityVal = () => {
+    const activitiesCheckbox = $('.activities input[type="checkbox"]');
+    
+        activitiesCheckbox.each(function(element) {
+            const fieldsetLegend = $('fieldset.activities legend');
+            let elementChecked = $(element).is(':checked');
+
+            // if not checked add class
+            if (elementChecked === false) {
+                fieldsetLegend.addClass('submit-error');
+
+            // if not checked remove class
+            } else if (elementChecked === true && elementChecked.length >= 1) {
+                fieldsetLegend.removeClass('submit-error');
+            }
 
 
+        });
+};
 
+// Function to check if CREDIT CARD IS SELECTED, the field has any items needed, and to add/remove helper class that shows the user their error 
+const creditCardVal = () => {
+    const cardNumber = $('#cc-num');
+    const cardZip = $('#zip');
+    const cardCVV = $('#cvv');
+    // check if the credit card option is selected
+    if (creditCard.is(':selected')) {
+        
+
+        // if card number field empty add class
+        if (cardNumber.val() === '') {
+            cardNumber.addClass('submit-error');
+        // else remove the helper class
+        } else if (cardNumber.val() !== '' && cardNumber.val().match(regexCreditCard)) {
+            cardNumber.removeClass('submit-error');
+        }
+
+        // if zip code is empty add class
+        if (cardZip.val() === '') {
+            cardZip.addClass('submit-error');
+        // else remove the helper class
+        } else if (cardZip.val() !== '' && cardZip.val().match(regexZipCode)) {
+            cardZip.removeClass('submit-error');
+        }
+
+        // if cvv field empty add class
+        if (cardCVV.val() === '') {
+            cardCVV.addClass('submit-error');
+        // else remove the helper class
+        } else if (cardCVV.val() !== '' && cardCVV.val().match(regexCVV)) {
+            cardCVV.removeClass('submit-error');
+        }
+
+    }
+
+};
+
+// Callback function for the submit event
+const callBack = () => {
+    nameVal();
+    emailVal();
+    activityVal();
+    creditCardVal();
+};
+
+// add event listener to button element with callback function
+$('button').click(function(){
+    callBack();
+});
