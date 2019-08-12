@@ -5,7 +5,7 @@ FSJS project 3 - Interactive Form
 /******************************************
 Global Variables
 ******************************************/
-
+// SELECT CONSTANTS 
 const colorOption = $('#color');
 const targetName = $('.activities [name]');
 const activitiesInput = $('.activities input');
@@ -13,10 +13,26 @@ const activitiesField = $('.activities');
 const creditCard = $('#payment option[value="credit card"]');
 const paypal = $('#payment option[value="paypal"]');
 const bitcoin = $('#payment option[value="bitcoin"]');
+const BUTTON = $('button');
+// FORM VALIDATION CONSTANTS
+const NAME_ERROR = $('<span class="name-error">Please enter your name</span>');
+const EMAIL_ERROR = $('<span class="email-error">Please enter a valid email address</span>');
+const ACTIVITY_ERROR = $('<span class="activity-error">Please select at least one activity</span>');
+const CREDIT_NUMBER_ERROR = $('<span class="credit-error">Please ensure that the card number is between 13 and 16 digits</span>');
+const CREDIT_ZIP_ERROR = $('<span class="zip-error">5 digit zip</span>');
+const CREDIT_CVV_ERROR = $('<span class="cvv-error">3 digit CVV</span>');
+const NAME_LABEL = $('div.container label[for="name"]');
+const EMAIL_LABEL = $('div.container label[for="mail"]');
+const ACTIVITY_LABEL = $('div.container fieldset.activities');
+const CREDIT_LABEL = $('div.container label[for="cc-num"]');
+const ZIP_LABEL = $('div.container label[for="zip"]');
+const CVV_LABEL = $('div.container label[for="cvv"]');
+// REGEX CONSTANTS
 const regexEmail = /^.+@\w+\.com$/;
 const regexCreditCard = /^\d{13,16}$/;
 const regexZipCode = /^\d{5}$/;
 const regexCVV = /^\d{3}$/;
+// HELPER SELECTOR FOR T-SHIRT OPTIONS
 const jsPunsAvailable = [
     $('#color option[value="cornflowerblue"]'),
     $('#color option[value="darkslategrey"]'),
@@ -213,15 +229,31 @@ $('#payment').change(function(e){
 Form Validation
 ******************************************/
 
+// Place all the helper elements on the page and then hide them right away
+NAME_LABEL.append(NAME_ERROR);
+$('.name-error').hide();
+EMAIL_LABEL.append(EMAIL_ERROR);
+$('.email-error').hide();
+ACTIVITY_LABEL.append(ACTIVITY_ERROR);
+$('.activity-error').hide();
+CREDIT_LABEL.append(CREDIT_NUMBER_ERROR);
+$('.credit-error').hide();
+ZIP_LABEL.append(CREDIT_ZIP_ERROR);
+$('.zip-error').hide();
+CVV_LABEL.append(CREDIT_CVV_ERROR);
+$('.cvv-error').hide();
+
 // Function to check if NAME field is blank and to add/remove helper class that shows the user their error
 const nameVal = () => {
     const name = $('#name');
     // if empty add class
     if(name.val() === '') {
         name.addClass('submit-error');
+        $('.name-error').show(500);
     // if not remove class    
     } else if(name.val() !== '') {
         name.removeClass('submit-error');
+        $('.name-error').hide(500);
     }
 };
 
@@ -232,9 +264,11 @@ const emailVal = () => {
     // if empty add class
     if (emailValue === '') {
         email.addClass('submit-error');
+        $('.email-error').show(500);
     // if not remove class
     } else if(emailValue !== '' && emailValue.match(regexEmail)) {
         email.removeClass('submit-error');
+        $('.email-error').hide(500);
     }
 };
 
@@ -249,13 +283,13 @@ const activityVal = () => {
             // if not checked add class
             if (elementChecked === false) {
                 fieldsetLegend.addClass('submit-error');
+                $('.activity-error').show(500);
 
             // if not checked remove class
             } else if (elementChecked === true && elementChecked.length >= 1) {
                 fieldsetLegend.removeClass('submit-error');
+                $('.activity-error').hide(500);
             }
-
-
         });
 };
 
@@ -271,40 +305,55 @@ const creditCardVal = () => {
         // if card number field empty add class
         if (cardNumber.val() === '') {
             cardNumber.addClass('submit-error');
+            $('.credit-error').show(500);
         // else remove the helper class
         } else if (cardNumber.val() !== '' && cardNumber.val().match(regexCreditCard)) {
             cardNumber.removeClass('submit-error');
+            $('.credit-error').hide(500);
         }
 
         // if zip code is empty add class
         if (cardZip.val() === '') {
             cardZip.addClass('submit-error');
+            $('.zip-error').show(500);
         // else remove the helper class
         } else if (cardZip.val() !== '' && cardZip.val().match(regexZipCode)) {
             cardZip.removeClass('submit-error');
+            $('.zip-error').hide(500);
         }
 
         // if cvv field empty add class
         if (cardCVV.val() === '') {
             cardCVV.addClass('submit-error');
+            $('.cvv-error').show(500);
         // else remove the helper class
         } else if (cardCVV.val() !== '' && cardCVV.val().match(regexCVV)) {
             cardCVV.removeClass('submit-error');
+            $('.cvv-error').hide(500);
         }
-
     }
-
 };
 
-// Callback function for the submit event
-const callBack = () => {
+/******************************************
+Event Listeners
+******************************************/
+
+// NAME FIELD KEYUP LISTENER
+$('#name').keyup(function(e){
     nameVal();
+    e.preventDefault();
+});
+
+// EMAIL FIELD KEYUP LISTENER
+$('#mail').keyup(function(e){
     emailVal();
+    e.preventDefault();
+});
+
+// BUTTON SUBMIT EVENT LISTENER
+BUTTON.submit(function(event){
+    event.preventDefault();
     activityVal();
     creditCardVal();
-};
-
-// add event listener to button element with callback function
-$('button').click(function(){
-    callBack();
 });
+

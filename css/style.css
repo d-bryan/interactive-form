@@ -186,6 +186,15 @@ textarea:focus {
 	border-radius: 3px;
 }
 
+.name-error, .email-error, .activity-error, .credit-error, .zip-error, .cvv-error {
+	float: right;
+	background: rgba(255, 78, 78, 0.767);
+	color: #fff;
+	border: 2px solid #fff;
+	border-radius: 3px;
+	padding: 3px;
+}
+
 /* ================================= 
   Media Queries
 ==================================== */
