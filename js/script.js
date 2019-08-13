@@ -17,6 +17,7 @@ const BUTTON = $('button');
 // FORM VALIDATION CONSTANTS
 const NAME_ERROR = $('<span class="name-error">Please enter your name</span>');
 const EMAIL_ERROR = $('<span class="email-error">Please enter a valid email address</span>');
+const EMAIL_SUCCESS = $('<span class="email-success">That looks like a valid email to us</span>');
 const ACTIVITY_ERROR = $('<span class="activity-error">Please select at least one activity</span>');
 const CREDIT_NUMBER_ERROR = $('<span class="credit-error">Please ensure that the card number is between 13 and 16 digits</span>');
 const CREDIT_ZIP_ERROR = $('<span class="zip-error">5 digit zip</span>');
@@ -46,6 +47,26 @@ const heartJSAvailable = [
 let activitiesCost = 0;
 let activitiesLegend = $('<span id = "activities-subtotal">Your total cost is: $' + activitiesCost + '</span>').appendTo('.activities');
 activitiesLegend;
+
+// function to add validation messages to the page for the user
+const validationMessages = () => {
+
+    NAME_LABEL.append(NAME_ERROR);
+    $('.name-error').hide();
+    EMAIL_LABEL.append(EMAIL_ERROR);
+    $('.email-error').hide();
+    EMAIL_LABEL.append(EMAIL_SUCCESS);
+    $('.email-success').hide();
+    ACTIVITY_LABEL.append(ACTIVITY_ERROR);
+    $('.activity-error').hide();
+    CREDIT_LABEL.append(CREDIT_NUMBER_ERROR);
+    $('.credit-error').hide();
+    ZIP_LABEL.append(CREDIT_ZIP_ERROR);
+    $('.zip-error').hide();
+    CVV_LABEL.append(CREDIT_CVV_ERROR);
+    $('.cvv-error').hide();
+
+};
 
 /******************************************
 Basic Info Section
@@ -230,18 +251,7 @@ Form Validation
 ******************************************/
 
 // Place all the helper elements on the page and then hide them right away
-NAME_LABEL.append(NAME_ERROR);
-$('.name-error').hide();
-EMAIL_LABEL.append(EMAIL_ERROR);
-$('.email-error').hide();
-ACTIVITY_LABEL.append(ACTIVITY_ERROR);
-$('.activity-error').hide();
-CREDIT_LABEL.append(CREDIT_NUMBER_ERROR);
-$('.credit-error').hide();
-ZIP_LABEL.append(CREDIT_ZIP_ERROR);
-$('.zip-error').hide();
-CVV_LABEL.append(CREDIT_CVV_ERROR);
-$('.cvv-error').hide();
+validationMessages();
 
 // Function to check if NAME field is blank and to add/remove helper class that shows the user their error
 const nameVal = () => {
@@ -267,11 +277,13 @@ const emailVal = () => {
     if (emailValue === '') {
         email.addClass('submit-error');
         $('.email-error').show(500);
+        $('.email-success').hide();
         return false;
     // if not remove class
     } else if(emailValue !== '' && emailValue.match(regexEmail)) {
         email.removeClass('submit-error');
         $('.email-error').hide(500);
+        $('.email-success').show(500);
         return true;
     }
 };
@@ -296,64 +308,76 @@ const activityVal = () => {
 
 // Function to check if CREDIT CARD IS SELECTED, the card number field has any items needed, and to add/remove helper class that shows the user their error 
 const creditCardNumberVal = () => {
-    const cardNumber = $('#cc-num');
-    let checkVal;
+    let cardNumber = $('#cc-num').val();
+    let numberParse = parseInt(cardNumber);
     // check if the credit card option is selected
     if (creditCard.is(':selected')) {
         
         // if card number field empty add class
-        if (cardNumber.val() === '') {
-            cardNumber.addClass('submit-error');
+        if (cardNumber === '') {
+            $('#cc-num').addClass('submit-error');
             $('.credit-error').show(500);
             return false;
         // else remove the helper class
-        } else if (cardNumber.val() !== '' && cardNumber.val().match(regexCreditCard)) {
-            cardNumber.removeClass('submit-error');
+        } else if (cardNumber !== '' && numberParse.match(regexCreditCard)) {
+            $('#cc-num').removeClass('submit-error');
             $('.credit-error').hide(500);
             return true;
         }
+    } else if (bitcoin.is(':seleted')) {
+        return true;
+    } else if (paypal.is(':selected')) {
+        return true;
     }
 };
 
 // Function to check if CREDIT CARD IS SELECTED, the ZIP CODE field has any items needed, and to add/remove helper class that shows the user their error 
 const cardZipVal = () => {
-    const cardZip = $('#zip');
-    let checkVal;
+    let cardZip = $('#zip').val();
+    let zipParse = parseInt(cardZip);
     // check if the credit card option is selected
     if (creditCard.is(':selected')) {
 
         // if zip code is empty add class
-        if (cardZip.val() === '') {
-            cardZip.addClass('submit-error');
+        if (cardZip === '') {
+            $('#zip').addClass('submit-error');
             $('.zip-error').show(500);
             return false;
             
             // else remove the helper class
-        } else if (cardZip.val() !== '' && cardZip.val().match(regexZipCode)) {
-            cardZip.removeClass('submit-error');
+        } else if (cardZip !== '' && zipParse.match(regexZipCode)) {
+            $('#zip').removeClass('submit-error');
             $('.zip-error').hide(500);
             return true;
         }
+    } else if (bitcoin.is(':seleted')) {
+        return true;
+    } else if (paypal.is(':selected')) {
+        return true;
     }
 };
 // Function to check if CREDIT CARD IS SELECTED, the CVV field has any items needed, and to add/remove helper class that shows the user their error
 const card_CVV_Val = () => {
-    const cardCVV = $('#cvv');
-    let checkVal;
+    let cardCVV = $('#cvv').val();
+    let cvvParse = parseInt(cardCVV);
     // check if the credit card option is selected
     if (creditCard.is(':selected')) {
 
         // if cvv field empty add class
-        if (cardCVV.val() === '') {
-            cardCVV.addClass('submit-error');
+        if (cardCVV === '') {
+            $('#cvv').addClass('submit-error');
             $('.cvv-error').show(500);
             return false;
             // else remove the helper class
-        } else if (cardCVV.val() !== '' && cardCVV.val().match(regexCVV)) {
-            cardCVV.removeClass('submit-error');
+        } else if (cardCVV !== '' && cvvParse.match(regexCVV)) {
+            $('#cvv').removeClass('submit-error');
             $('.cvv-error').hide(500);
             return true;
         }
+    } else if (bitcoin.is(':seleted')) {
+        return true;
+    } else if (paypal.is(':selected')) {
+        return true;
     }
 };
 

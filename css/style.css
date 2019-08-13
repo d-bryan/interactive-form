@@ -195,6 +195,15 @@ textarea:focus {
 	padding: 3px;
 }
 
+.email-success {
+	float: right;
+	background: rgba(50, 138, 64, 0.767);
+	color: #fff;
+	border: 2px solid #fff;
+	border-radius: 3px;
+	padding: 3px;
+}
+
 /* ================================= 
   Media Queries
 ==================================== */
