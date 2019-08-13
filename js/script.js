@@ -250,10 +250,12 @@ const nameVal = () => {
     if(name.val() === '') {
         name.addClass('submit-error');
         $('.name-error').show(500);
+        return false;
     // if not remove class    
     } else if(name.val() !== '') {
         name.removeClass('submit-error');
         $('.name-error').hide(500);
+        return true;
     }
 };
 
@@ -265,71 +267,92 @@ const emailVal = () => {
     if (emailValue === '') {
         email.addClass('submit-error');
         $('.email-error').show(500);
+        return false;
     // if not remove class
     } else if(emailValue !== '' && emailValue.match(regexEmail)) {
         email.removeClass('submit-error');
         $('.email-error').hide(500);
+        return true;
     }
 };
 
 // Function to check if ACTIVITIES field has any items checked, and to add/remove helper class that shows the user their error
 const activityVal = () => {
-    const activitiesCheckbox = $('.activities input[type="checkbox"]');
-    
-        activitiesCheckbox.each(function(element) {
-            const fieldsetLegend = $('fieldset.activities legend');
-            let elementChecked = $(element).is(':checked');
-
-            // if not checked add class
-            if (elementChecked === false) {
-                fieldsetLegend.addClass('submit-error');
-                $('.activity-error').show(500);
-
-            // if not checked remove class
-            } else if (elementChecked === true && elementChecked.length >= 1) {
-                fieldsetLegend.removeClass('submit-error');
-                $('.activity-error').hide(500);
-            }
-        });
+    const fieldsetLegend = $('fieldset.activities legend');
+    const checkboxIsChecked = $('.activities input:checkbox:checked');
+        
+        // if checkbox length is greater than 0 remove helper class
+        if (checkboxIsChecked.length > 0) {
+            fieldsetLegend.removeClass('submit-error');
+            $('.activity-error').hide(500);
+            return true;
+        // else add helper class
+        } else {
+            fieldsetLegend.addClass('submit-error');
+            $('.activity-error').show(500);
+            return false;
+        }
 };
 
-// Function to check if CREDIT CARD IS SELECTED, the field has any items needed, and to add/remove helper class that shows the user their error 
-const creditCardVal = () => {
+// Function to check if CREDIT CARD IS SELECTED, the card number field has any items needed, and to add/remove helper class that shows the user their error 
+const creditCardNumberVal = () => {
     const cardNumber = $('#cc-num');
-    const cardZip = $('#zip');
-    const cardCVV = $('#cvv');
+    let checkVal;
     // check if the credit card option is selected
     if (creditCard.is(':selected')) {
         
-
         // if card number field empty add class
         if (cardNumber.val() === '') {
             cardNumber.addClass('submit-error');
             $('.credit-error').show(500);
+            return false;
         // else remove the helper class
         } else if (cardNumber.val() !== '' && cardNumber.val().match(regexCreditCard)) {
             cardNumber.removeClass('submit-error');
             $('.credit-error').hide(500);
+            return true;
         }
+    }
+};
+
+// Function to check if CREDIT CARD IS SELECTED, the ZIP CODE field has any items needed, and to add/remove helper class that shows the user their error 
+const cardZipVal = () => {
+    const cardZip = $('#zip');
+    let checkVal;
+    // check if the credit card option is selected
+    if (creditCard.is(':selected')) {
 
         // if zip code is empty add class
         if (cardZip.val() === '') {
             cardZip.addClass('submit-error');
             $('.zip-error').show(500);
-        // else remove the helper class
+            return false;
+            
+            // else remove the helper class
         } else if (cardZip.val() !== '' && cardZip.val().match(regexZipCode)) {
             cardZip.removeClass('submit-error');
             $('.zip-error').hide(500);
+            return true;
         }
+    }
+};
+// Function to check if CREDIT CARD IS SELECTED, the CVV field has any items needed, and to add/remove helper class that shows the user their error
+const card_CVV_Val = () => {
+    const cardCVV = $('#cvv');
+    let checkVal;
+    // check if the credit card option is selected
+    if (creditCard.is(':selected')) {
 
         // if cvv field empty add class
         if (cardCVV.val() === '') {
             cardCVV.addClass('submit-error');
             $('.cvv-error').show(500);
-        // else remove the helper class
+            return false;
+            // else remove the helper class
         } else if (cardCVV.val() !== '' && cardCVV.val().match(regexCVV)) {
             cardCVV.removeClass('submit-error');
             $('.cvv-error').hide(500);
+            return true;
         }
     }
 };
@@ -351,9 +374,22 @@ $('#mail').keyup(function(e){
 });
 
 // BUTTON SUBMIT EVENT LISTENER
-BUTTON.submit(function(event){
-    event.preventDefault();
+$('form').on('submit',function(){
+    nameVal();
+    emailVal();
     activityVal();
-    creditCardVal();
-});
+    creditCardNumberVal();
+    cardZipVal();
+    card_CVV_Val();
 
+    if (nameVal() &&
+        emailVal() &&
+        activityVal() &&
+        creditCardNumberVal() &&
+        cardZipVal() &&
+        card_CVV_Val()) {
+            return true;
+    } else {
+        return false;
+    } 
+});
