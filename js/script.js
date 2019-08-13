@@ -402,7 +402,8 @@ $(document).ready(function () {
     });
 
     // BUTTON SUBMIT EVENT LISTENER
-    $('form').on('submit',function(){
+    $('form').on('submit',function(e){
+        e.preventDefault()
         nameVal();
         emailVal();
         activityVal();
