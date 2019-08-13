@@ -8,7 +8,6 @@ Global Variables
 // progessive enhancement added
 $(document).ready(function () {
     // SELECT CONSTANTS 
-    const colorOption = $('#color');
     const targetName = $('.activities [name]');
     const activitiesInput = $('.activities input');
     const activitiesField = $('.activities');
@@ -37,17 +36,6 @@ $(document).ready(function () {
     const regexZipCode = /^\d{5}$/;
     const regexCVV = /^\d{3}$/;
 
-    // HELPER SELECTOR FOR T-SHIRT OPTIONS
-    const jsPunsAvailable = [
-        $('#color option[value="cornflowerblue"]'),
-        $('#color option[value="darkslategrey"]'),
-        $('#color option[value="gold"]')
-    ];
-    const heartJSAvailable = [
-        $('#color option[value="tomato"]'),
-        $('#color option[value="steelblue"]'),
-        $('#color option[value="dimgrey"]')
-    ];
     let activitiesCost = 0;
     let activitiesLegend = $('<span id = "activities-subtotal">Your total cost is: $' + activitiesCost + '</span>').appendTo('.activities');
     activitiesLegend;
@@ -115,33 +103,32 @@ $(document).ready(function () {
             $('#color').removeClass('is-hidden');
             $('#color').parent().find('label').text('Color:')
         }
-
-        // Loop over each color option field element
-        $(colorOption).each(function () {
-            // If the target value equals js puns hide the colors unavailable to this theme
-            if (jsPUNS) {
-                $(heartJSAvailable).each(function(){
-                    $(this).addClass('is-hidden');
+        // function to check hide and show color options for T-Shirts
+        const checkShirtVal = () => {
+            // hide all options right away
+            $('#color option').attr('hidden',true);
+            // if target is equal to js puns, set all display attributes to hidden then show them and select the first one
+            if (jsPUNS === true) {
+                $('#color option:contains(JS Puns shirt only)').each(function(){
+                    $(this).attr('selected',false);
                 });
+                $(':contains(JS Puns shirt only)').attr('hidden',false);
+                $('#color option').eq(0).attr('selected',true);
+            // if target is equal to heart js, set all display attributes to hidden then show them and select the first one
+            } else if (heartJS === true) {
+                $('#color option:contains(JS shirt only)').each(function(){
+                    $(this).attr('selected',false);
+                });
+                $(':contains(JS shirt only)').attr('hidden',false);
+                $('#color option').eq(3).attr('selected', true);
+            // else set all the display attribute back to hidden
             } else {
-                // Otherwise remove the class the hides these colors
-                $(heartJSAvailable).each(function(){
-                    $(this).removeClass('is-hidden');
-                });
+                $('#color option').attr('hidden',true);
             }
-            // If the target value equals heart js hide the colors unavailable to this theme
-            if (heartJS) {
-                $(jsPunsAvailable).each(function(){
-                    $(this).addClass('is-hidden');
-                    // $(this).toggleClass('is-hidden');
-                });
-            } else {
-                // Otherwise remove the class the hides these colors
-                $(jsPunsAvailable).each(function(){
-                    $(this).removeClass('is-hidden');
-                    // $(this).toggleClass('is-hidden');
-                });
-            }
+        };
+        // run the function on each of the color options
+        $('#color').each(function (){
+            checkShirtVal();
         });
     });
 
@@ -155,6 +142,7 @@ $(document).ready(function () {
         // helper variable to check if target box is checked
         let checked = $(e.target).prop('checked');
         // set of sequential variables to systematically take the $ off the data type and convert to an integer for use in addittion and subtraction
+        
         let currentBox = e.target;
         let currentDataCost = $(currentBox).data('cost');
         let removePriceSign = currentDataCost.slice(1);
@@ -402,23 +390,25 @@ $(document).ready(function () {
     });
 
     // BUTTON SUBMIT EVENT LISTENER
-    $('form').on('submit',function(e){
-        e.preventDefault()
+    $('form').on('submit',function(event){
+        
         nameVal();
         emailVal();
         activityVal();
         creditCardNumberVal();
         cardZipVal();
         card_CVV_Val();
-
+        
         if (nameVal() &&
             emailVal() &&
             activityVal() &&
             creditCardNumberVal() &&
             cardZipVal() &&
             card_CVV_Val()) {
+                window.location.reload();
                 return true;
         } else {
+            event.preventDefault()
             return false;
         } 
     });
