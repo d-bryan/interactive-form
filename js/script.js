@@ -13,7 +13,7 @@ const activitiesField = $('.activities');
 const creditCard = $('#payment option[value="credit card"]');
 const paypal = $('#payment option[value="paypal"]');
 const bitcoin = $('#payment option[value="bitcoin"]');
-const BUTTON = $('button');
+
 // FORM VALIDATION CONSTANTS
 const NAME_ERROR = $('<span class="name-error">Please enter your name</span>');
 const EMAIL_ERROR = $('<span class="email-error">Please enter a valid email address</span>');
@@ -28,11 +28,13 @@ const ACTIVITY_LABEL = $('div.container fieldset.activities');
 const CREDIT_LABEL = $('div.container label[for="cc-num"]');
 const ZIP_LABEL = $('div.container label[for="zip"]');
 const CVV_LABEL = $('div.container label[for="cvv"]');
+
 // REGEX CONSTANTS
 const regexEmail = /^.+@\w+\.com$/;
 const regexCreditCard = /^\d{13,16}$/;
 const regexZipCode = /^\d{5}$/;
 const regexCVV = /^\d{3}$/;
+
 // HELPER SELECTOR FOR T-SHIRT OPTIONS
 const jsPunsAvailable = [
     $('#color option[value="cornflowerblue"]'),
