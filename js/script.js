@@ -32,13 +32,47 @@ $(document).ready(function () {
 
     // REGEX CONSTANTS
     const regexEmail = /^.+@\w+\.com$/;
-    const regexCreditCard = /^\d{13,16}$/;
-    const regexZipCode = /^\d{5}$/;
-    const regexCVV = /^\d{3}$/;
+    const regexCreditCard = /\d{13,16}/;
+    const regexZipCode = /\d{5}/;
+    const regexCVV = /\d{3}/;
 
     let activitiesCost = 0;
     let activitiesLegend = $('<span id = "activities-subtotal">Your total cost is: $' + activitiesCost + '</span>').appendTo('.activities');
     activitiesLegend;
+
+    // add required attributes to input fields for form validation
+    const makeRequired = () => {
+        let $name = $('#name');
+        let $email = $('#mail');
+        let $title = $('#title');
+        let $shirtSize = $('#size');
+        let $shirtTheme = $('#design');
+        let $shirtColor = $('#color');
+        let $payment = $('#payment');
+        let $cc_num = $('#cc-num');
+        let $zip = $('#zip');
+        let $cvv = $('#cvv');
+
+        $name.attr('required', true);
+        $email.attr('required', true);
+        $title.attr('required', true);
+        $shirtSize.attr('required', true);
+        $shirtTheme.attr('required', true);
+        $shirtColor.attr('required', true);
+        $payment.attr('required', true);
+        $cc_num.attr({'minlength': 13,'maxlength': 16});
+        $zip.attr({'minlength': 5,'maxlength': 5});
+        $cvv.attr({'minlength': 3,'maxlength': 3});
+    };
+    makeRequired();
+
+    // function to select credit card options
+    const getCardInput = (attr, val) => {
+        // set card attributes to what is passed into the function
+        $('#cc-num').attr(attr, val);
+        $('#zip').attr(attr, val);
+        $('#cvv').attr(attr, val);
+    };
 
     // function to add validation messages to the page for the user
     const validationMessages = () => {
@@ -248,15 +282,19 @@ $(document).ready(function () {
     // Function to check if NAME field is blank and to add/remove helper class that shows the user their error
     const nameVal = () => {
         const name = $('#name');
+        const nameValue = name.val();
+        
         // if empty add class
-        if(name.val() === '') {
+        if(nameValue === '') {
             name.addClass('submit-error');
             $('.name-error').show(500);
+
             return false;
         // if not remove class    
-        } else if(name.val() !== '') {
+        } else if(nameValue !== '') {
             name.removeClass('submit-error');
             $('.name-error').hide(500);
+
             return true;
         }
     };
@@ -270,12 +308,14 @@ $(document).ready(function () {
             email.addClass('submit-error');
             $('.email-error').show(500);
             $('.email-success').hide();
+
             return false;
         // if not remove class
         } else if(emailValue !== '' && emailValue.match(regexEmail)) {
             email.removeClass('submit-error');
             $('.email-error').hide(500);
             $('.email-success').show(500);
+
             return true;
         }
     };
@@ -284,16 +324,19 @@ $(document).ready(function () {
     const activityVal = () => {
         const fieldsetLegend = $('fieldset.activities legend');
         const checkboxIsChecked = $('.activities input:checkbox:checked');
+        
             
             // if checkbox length is greater than 0 remove helper class
             if (checkboxIsChecked.length > 0) {
                 fieldsetLegend.removeClass('submit-error');
                 $('.activity-error').hide(500);
+    
                 return true;
             // else add helper class
             } else {
                 fieldsetLegend.addClass('submit-error');
                 $('.activity-error').show(500);
+    
                 return false;
             }
     };
@@ -304,21 +347,34 @@ $(document).ready(function () {
         let numberParse = parseInt(cardNumber);
         // check if the credit card option is selected
         if (creditCard.is(':selected')) {
-            
+            // set the credit card attribute to be required
+            getCardInput('required', true);
+            $('#bitcoin').attr('required', false);
+            $('#paypal').attr('required', false);
             // if card number field empty add class
             if (cardNumber === '') {
                 $('#cc-num').addClass('submit-error');
                 $('.credit-error').show(500);
+    
                 return false;
             // else remove the helper class
             } else if (cardNumber !== '' && numberParse.match(regexCreditCard)) {
                 $('#cc-num').removeClass('submit-error');
                 $('.credit-error').hide(500);
+    
                 return true;
             }
         } else if (bitcoin.is(':seleted')) {
+            $('#bitcoin').attr('required', true);
+            getCardInput('required', false);
+            $('#paypal').attr('required', false);
+
             return true;
         } else if (paypal.is(':selected')) {
+            $('#paypal').attr('required', true);
+            getCardInput('required', false);
+            $('#bitcoin').attr('required', false);
+
             return true;
         }
     };
@@ -329,22 +385,35 @@ $(document).ready(function () {
         let zipParse = parseInt(cardZip);
         // check if the credit card option is selected
         if (creditCard.is(':selected')) {
+            getCardInput('required', true);
+            $('#bitcoin').attr('required', false);
+            $('#paypal').attr('required', false);
 
             // if zip code is empty add class
             if (cardZip === '') {
                 $('#zip').addClass('submit-error');
                 $('.zip-error').show(500);
+    
                 return false;
                 
                 // else remove the helper class
             } else if (cardZip !== '' && zipParse.match(regexZipCode)) {
                 $('#zip').removeClass('submit-error');
                 $('.zip-error').hide(500);
+    
                 return true;
             }
         } else if (bitcoin.is(':seleted')) {
+            $('#bitcoin').attr('required', true);
+            getCardInput('required', false);
+            $('#paypal').attr('required', false);
+
             return true;
         } else if (paypal.is(':selected')) {
+            $('#paypal').attr('required', true);
+            getCardInput('required', false);
+            $('#bitcoin').attr('required', false);
+
             return true;
         }
     };
@@ -359,16 +428,23 @@ $(document).ready(function () {
             if (cardCVV === '') {
                 $('#cvv').addClass('submit-error');
                 $('.cvv-error').show(500);
+    
                 return false;
                 // else remove the helper class
             } else if (cardCVV !== '' && cvvParse.match(regexCVV)) {
                 $('#cvv').removeClass('submit-error');
                 $('.cvv-error').hide(500);
+    
                 return true;
             }
         } else if (bitcoin.is(':seleted')) {
+
             return true;
         } else if (paypal.is(':selected')) {
+            $('#paypal').attr('required', true);
+            getCardInput('required', false);
+            $('#bitcoin').attr('required', false);
+
             return true;
         }
     };
@@ -378,15 +454,15 @@ $(document).ready(function () {
     ******************************************/
 
     // NAME FIELD KEYUP LISTENER
-    $('#name').keyup(function(e){
+    $('#name').keyup(function(event){
         nameVal();
-        e.preventDefault();
+        event.preventDefault();
     });
 
     // EMAIL FIELD KEYUP LISTENER
-    $('#mail').keyup(function(e){
+    $('#mail').keyup(function(event){
         emailVal();
-        e.preventDefault();
+        event.preventDefault();
     });
 
     // BUTTON SUBMIT EVENT LISTENER
@@ -406,9 +482,11 @@ $(document).ready(function () {
             cardZipVal() &&
             card_CVV_Val()) {
                 window.location.reload();
+    
                 return true;
         } else {
             event.preventDefault()
+
             return false;
         } 
     });

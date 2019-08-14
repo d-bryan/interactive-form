@@ -101,6 +101,16 @@ input:focus {
 	transition: border-color .4s, background-color .4s;
 }
 
+input:invalid {
+	border: 2px solid rgba(255, 78, 78, 0.767);
+	border-radius: 3px;
+}
+
+input:valid {
+	border: 2px solid rgba(50, 138, 64, 0.767);
+	border-radius: 3px;
+}
+
 input[type="checkbox"],
 input[type="radio"] {
 	display: inline-block;
