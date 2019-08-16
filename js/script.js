@@ -18,12 +18,17 @@ $(document).ready(function () {
 
     // FORM VALIDATION CONSTANTS
     const NAME_ERROR = $('<span class="name-error">Please enter your name</span>');
+    const NAME_SUCCESS = $('<span class="name-success">Ensure that its your full name</span>');
     const EMAIL_ERROR = $('<span class="email-error">Please enter a valid email address</span>');
     const EMAIL_SUCCESS = $('<span class="email-success">That looks like a valid email to us</span>');
     const ACTIVITY_ERROR = $('<span class="activity-error">Please select at least one activity</span>');
+    const ACTIVITY_SUCCESS = $('<span class="activity-success">You know that you can pick more too, how big is your wallet?</span>');
     const CREDIT_NUMBER_ERROR = $('<span class="credit-error">Please ensure that the card number is between 13 and 16 digits</span>');
+    const CREDIT_NUMBER_SUCCESS = $('<span class="credit-success">We are ready for your money</span>');
     const CREDIT_ZIP_ERROR = $('<span class="zip-error">5 digit zip</span>');
+    const CREDIT_ZIP_SUCCESS = $('<span class="zip-success">Looks Good</span>');
     const CREDIT_CVV_ERROR = $('<span class="cvv-error">3 digit CVV</span>');
+    const CREDIT_CVV_SUCCESS = $('<span class="cvv-success">Success</span>');
     const NAME_LABEL = $('div.container label[for="name"]');
     const EMAIL_LABEL = $('div.container label[for="mail"]');
     const ACTIVITY_LABEL = $('div.container fieldset.activities');
@@ -33,9 +38,9 @@ $(document).ready(function () {
 
     // REGEX CONSTANTS
     const regexEmail = /^.+@\w+\.com$/;
-    const regexCreditCard = /\d{13,16}/;
-    const regexZipCode = /\d{5}/;
-    const regexCVV = /\d{3}/;
+    const regexCreditCard = /^(?:[0-9]{13,16})?$/;
+    const regexZipCode = /^(?:[0-9]{5})?$/;
+    const regexCVV = /^(?:[0-9]{3})?$/;
 
     
     let activitiesCost = 0;
@@ -45,6 +50,8 @@ $(document).ready(function () {
     /******************************************
     Functions
     ******************************************/
+
+    // function to show that no data has been entered
 
     // function to set attribute value
     const setAttribute = (selector,attr, val) => {
@@ -69,6 +76,7 @@ $(document).ready(function () {
         add2.addClass(className);
     };
 
+    // Checks to see if at least one checkbox is checked
     const checkboxIsChecked = () => {
         const checkbox = $('fieldset.activities input');
         
@@ -113,36 +121,62 @@ $(document).ready(function () {
         return false;
       };
     // function to add validation messages to the page for the user
-    const validationMessages = (label, error, targethide) => {
-        label.append(error);
+    const validationMessages = (label, element, targethide) => {
+        label.append(element);
         targethide.hide();
     };
 
-    const addHelperContent = () => {
+    // const addHelperContent = () => {
         // Validation Messages
         validationMessages(NAME_LABEL,NAME_ERROR,$('.name-error'));
+        validationMessages(NAME_LABEL,NAME_SUCCESS,$('.name-success'));
         validationMessages(EMAIL_LABEL,EMAIL_ERROR,$('.email-error'));
         validationMessages(EMAIL_LABEL,EMAIL_SUCCESS,$('.email-success'));
         validationMessages(ACTIVITY_LABEL,ACTIVITY_ERROR,$('.activity-error'));
+        validationMessages(ACTIVITY_LABEL,ACTIVITY_SUCCESS,$('.activity-success'));
         validationMessages(CREDIT_LABEL,CREDIT_NUMBER_ERROR,$('.credit-error'));
+        validationMessages(CREDIT_LABEL,CREDIT_NUMBER_SUCCESS,$('.credit-success'));
         validationMessages(ZIP_LABEL,CREDIT_ZIP_ERROR,$('.zip-error'));
+        validationMessages(ZIP_LABEL,CREDIT_ZIP_SUCCESS,$('.zip-success'));
         validationMessages(CVV_LABEL,CREDIT_CVV_ERROR,$('.cvv-error'));
+        validationMessages(CVV_LABEL,CREDIT_CVV_SUCCESS,$('.cvv-success'));
+
+        // const setAttribute = (selector,attr, val) => {
+        //     selector.attr(attr,val);
+        // };
+
+        // set attribute for placeholder messages
+        setAttribute($('#name'),'placeholder','Hello my name is....');
+        $('#name').addClass('blank');
+        setAttribute($('#mail'),'placeholder','Should look like name@something.com');
+        $('#mail').addClass('blank');
+        setAttribute($('#cc-num'),'placeholder',"Numbers only no IOU's");
+        $('#cc-num').addClass('blank');
+        setAttribute($('#zip'),'placeholder','5 digits');
+        $('#zip').addClass('blank');
+        setAttribute($('#cvv'),'placeholder',"3 #'s on card");
+        $('#cvv').addClass('blank');
 
         // hide validation messages
         $('.name-error').hide();
+        $('.name-success').hide();
         $('.email-error').hide();
         $('.email-success').hide();
         $('.activity-error').hide();
+        $('.activity-success').hide();
         $('.credit-error').hide();
+        $('.credit-success').hide();
         $('.zip-error').hide();
+        $('.zip-success').hide();
         $('.cvv-error').hide();
+        $('.cvv-success').hide();
 
         // Required Content
         $('#cc-num').attr({'minlength': 13,'maxlength': 16});
         $('#zip').attr({'minlength': 5,'maxlength': 5});
         $('#cvv').attr({'minlength': 3,'maxlength': 3});
-    }; 
-    addHelperContent();
+    // }; 
+    // addHelperContent();
     /******************************************
     Basic Info Section
     ******************************************/
@@ -345,11 +379,15 @@ $(document).ready(function () {
     // Function to check if NAME field is blank and to add/remove helper class that shows the user their error
     const name_helper = () => {
         const nameValue = $('#name').val();
+        // start with shown
         
-        if (nameValue !== '') {
+
+        if (nameValue.length >= 3) {
+            add_class_show($('#name'),$('.name-success'),'submit-success');
             rem_class_hide($('#name'),$('.name-error'),'submit-error');
-        } else {
+        } else if (nameValue.length <= 1) {
             add_class_show($('#name'),$('.name-error'),'submit-error');
+            rem_class_hide($('#name'),$('.name-success'),'submit-success');
         }
     };
 
@@ -379,9 +417,11 @@ $(document).ready(function () {
 
         $('input[type="checkbox"]').change(function(){
             if (checkboxIsChecked() === true) {
+                $('.activity-success').show(500);
                 rem_class_hide(fieldsetLegend,$('.activity-error'),'submit-error');
             } else {
                 add_class_show(fieldsetLegend,$('.activity-error'),'submit-error');
+                $('.activity-success').hide(500);
             }
         });
     };
@@ -410,10 +450,13 @@ $(document).ready(function () {
         let emailValue = $('input#mail').val();
         let cardNumber_val = $('#cc-num').val();
         let numberParse_val = parseInt(cardNumber_val);
+        console.log(numberParse_val);
         let cardZip_val = $('#zip').val();
         let zipParse_val = parseInt(cardZip_val);
+        console.log(zipParse_val);
         let cardCVV_val = $('#cvv').val();
         let cvvParse_val = parseInt(cardCVV_val);
+        console.log(cvvParse_val);
 
         // name validation
         if ($('#name').val() === '' || $('#name').val().length === 0) {
@@ -454,27 +497,33 @@ $(document).ready(function () {
             //helper functions to display css classes
 
             // check credit card
-            if (checkCredit(numberParse_val) === false) {
+            if (checkCredit(cardNumber_val) === false || cardNumber_val === '') {
                 add_class_show($('#cc-num'),$('.credit-error'),'submit-error');
+                rem_class_hide($('#cc-num'),$('.credit-success'),'submit-success');
                 e.preventDefault();
             } else {
                 rem_class_hide($('#cc-num'),$('.credit-error'),'submit-error');
+                add_class_show($('#cc-num'),$('.credit-success'),'submit-success');
             }
 
             // check zip code
-            if (checkZip(zipParse_val) === false) {
+            if (checkZip(cardZip_val) === false || cardZip_val === '') {
                 add_class_show($('#zip'),$('.zip-error'),'submit-error');
+                rem_class_hide($('#zip'),$('.zip-success'),'submit-success');
                 e.preventDefault();
             } else {
                 rem_class_hide($('#zip'),$('.zip-error'),'submit-error');
+                add_class_show($('#zip'),$('.zip-success'),'submit-success');  
             }
 
             // check cvv number
-            if (checkCVV(cvvParse_val) === false) {
+            if (checkCVV(cardCVV_val) === false || cardCVV_val === '') {
                 add_class_show($('#cvv'),$('.cvv-error'),'submit-error');
+                rem_class_hide($('#cvv'),$('.cvv-success'),'submit-success');
                 e.preventDefault();
             } else {
                 rem_class_hide($('#cvv'),$('.cvv-error'),'submit-error');
+                add_class_show($('#cvv'),$('.cvv-success'),'submit-success');    
             }
 
         } else if (paymentType === 'PayPal'){

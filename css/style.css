@@ -196,6 +196,11 @@ textarea:focus {
 	border-radius: 3px;
 }
 
+.submit-success{
+	border: 2px solid rgba(50, 138, 64, 0.767);
+	border-radius: 3px;
+}
+
 .name-error, .email-error, .activity-error, .credit-error, .zip-error, .cvv-error {
 	float: right;
 	background: rgba(255, 78, 78, 0.767);
@@ -204,8 +209,12 @@ textarea:focus {
 	border-radius: 3px;
 	padding: 3px;
 }
+.blank::placeholder {
+	color: rgb(107, 107, 107);
+}
 
-.email-success {
+
+.name-success, .email-success, .activity-success, .credit-success, .zip-success, .cvv-success {
 	float: right;
 	background: rgba(50, 138, 64, 0.767);
 	color: #fff;
