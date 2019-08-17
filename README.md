@@ -13,7 +13,7 @@ Instead of plain "vanilla" JavaScript, you'll use the popular jQuery library to 
 
 ## Grading Requirements:
 
-My goal is to land an exceeds expectations grade for this project, to which the requirements are listed by each grading ruberic below.
+UPDATE - Passed with exceeds expectations grade
 
 ## jQuery:
 
